@@ -160,7 +160,7 @@ class Books():
             if self.books[isbn].available:
                 self.books[isbn].disable_book()
             else:
-                BooksError("This book is not available.")
+                raise BooksError("This book is not available.")
         else:
             raise BooksError("This book does not exist!")
         
