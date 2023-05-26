@@ -7,7 +7,7 @@ import os
 class BookAPI():
     # staticmethodデコレータを使用し、このメソッドをインスタンス化せずに使用できるようにします。
     @staticmethod
-    def get_book_info(isbn):
+    def get_book_info(isbn) -> dict:
         # Google Books APIを使って、指定されたISBNの本の情報を取得
         with urllib.request.urlopen(f"https://www.googleapis.com/books/v1/volumes?q=isbn:{isbn}") as response:
             if response.status == 200:  # 応答が成功した場合
@@ -36,14 +36,14 @@ class BookError(Exception):
 # 本を表現するクラス
 class Book():
     # 初期化メソッド
-    def __init__(self, isbn, book_info=None) -> None:
+    def __init__(self, isbn:str, book_info:dict=None) -> None:
         # ISBNのチェック
         if not self.check_isbn(isbn):
             raise ValueError("Invalid ISBN.")
-        self.isbn = isbn
+        self.isbn:str = isbn
         # 本の情報が指定されていない場合、APIを使用して取得
-        self.book_info = book_info if book_info is not None else BookAPI.get_book_info(isbn)
-        self.available = True
+        self.book_info:dict = book_info if book_info is not None else BookAPI.get_book_info(isbn)
+        self.available:bool = True
 
     def disable_book(self):
         self.available = False
@@ -51,7 +51,7 @@ class Book():
         self.available = True
 
     # ISBNの妥当性をチェックするメソッド
-    def check_isbn(self, isbn):
+    def check_isbn(self, isbn) -> bool:
         # ISBNが13桁または10桁の場合のチェック
         if len(isbn) == 13:
             return self.is_valid_isbn13(isbn)
@@ -61,7 +61,7 @@ class Book():
             return False
 
     # ISBN-13の妥当性をチェックするメソッド
-    def is_valid_isbn13(self, isbn):
+    def is_valid_isbn13(self, isbn:str) -> bool:
         # ISBN-13は13桁の数字である必要がある
         if len(isbn) != 13 or not isbn.isdigit():
             return False
@@ -76,7 +76,7 @@ class Book():
         return check_digit == int(isbn[-1])
 
     # ISBN-10の妥当性をチェックするメソッド
-    def is_valid_isbn10(self, isbn):
+    def is_valid_isbn10(self, isbn:str) -> bool:
         # ISBN-10は最初の9桁は数字、最後の1桁は数字またはX
         if len(isbn) != 10 or not isbn[:9].isdigit() or not (isbn[-1].isdigit() or isbn[-1] in 'Xx'):
             return False
@@ -94,7 +94,7 @@ class Book():
         return check_digit == isbn[-1].upper()
 
     # 本の情報を辞書形式で返すメソッド
-    def return_info_dic(self):
+    def return_info_dic(self) -> dict[str,str]:
         return self.book_info
 
     # 本の情報を表示するメソッド
@@ -112,7 +112,7 @@ class BooksError(Exception):
 class Books():
     # 初期化メソッド
     def __init__(self):
-        self.books = {}  # ISBNをキーとした本の辞書
+        self.books:dict[str,Book] = {}  # ISBNをキーとした本の辞書
 
     # 本の情報をJSONファイルとして保存するメソッド
     def save_books(self):
@@ -146,8 +146,14 @@ class Books():
         for book in self.books.values():
             book.show_info()
 
+    # 指定したISBNの本の情報を表示するメソッド
     def show_book_info(self,isbn:str):
-        return self.books[isbn]
+        # getメソッドを使用して、指定されたISBNが存在しない場合にNoneを返すようにします。
+        book = self.books.get(isbn)
+        if book is None:
+            raise BooksError("This book does not exist!")
+        else:
+            return book
 
     def does_book_exist(self, isbn):
         if isbn in self.books:
@@ -167,22 +173,22 @@ class Books():
     def return_book(self,isbn):
         if  self.does_book_exist(isbn):
             if self.books[isbn].available == False:
-                self.books[isbn].avtive_book()
+                self.books[isbn].active_book()
             else:
                 raise BookError("This book has not been borrowed.")
         else:
             raise BooksError("This book does not exist!")
 
 class User:
-    def __init__(self, id):
-        self.id = id
-        self.borrowed_books = []
+    def __init__(self, student_id:str):
+        self.student_id:str = student_id
+        self.borrowed_books:list[str] = []
 
     def borrow_book(self,books: Books, isbn : str):
         try:
             books.borrow_book(isbn)
             self.borrowed_books.append(isbn)
-            print(f"{self.id}が{isbn}を借りました")
+            print(f"{self.student_id}が{isbn}を借りました")
             print(f"{isbn}のじょうほうは{books.show_book_info(isbn)}")
         except BooksError as a:
             print(a)
@@ -191,13 +197,13 @@ class User:
         try:
             books.return_book(isbn)
             self.borrowed_books.remove(isbn)
-            print(f"{self.id}が{isbn}を返しました")
+            print(f"{self.student_id}が{isbn}を返しました")
             print(f"{isbn}のじょうほうは{books.show_book_info(isbn)}")
         except BooksError as a:
             print(a)
 
     def show_borrowed_books(self):
         # ユーザーが現在借りている全ての本を表示します。
-        print(f"User {self.id} has borrowed these books:")
+        print(f"User {self.student_id} has borrowed these books:")
         print(self.borrowed_books)
 

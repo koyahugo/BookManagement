@@ -3,32 +3,19 @@ import tkinter as tk
 class BookApp(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
-        self._frame = None
+        self._frame:tk.Frame = None
         self.switch_frame(MainPage)
 
-    def switch_frame(self, frame_class):
-        new_frame = frame_class(self)
+    def switch_frame(self, frame_class:tk.Frame):
+        new_frame:tk.Frame = frame_class(self)
         if self._frame is not None:
             self._frame.destroy()
         self._frame = new_frame
         self._frame.pack()
-"""
-class StartPage(tk.Frame):
-    def __init__(self, master):
-        tk.Frame.__init__(self, master)
-        tk.Label(self, text="Start page", font=('Helvetica', 18, "bold")).pack(side="top", fill="x", pady=10)
-        tk.Button(self, text="Go to page one",command=lambda: master.switch_frame(MainPage)).pack()
-
-class PageOne(tk.Frame):
-    def __init__(self, master):
-        tk.Frame.__init__(self, master)
-        tk.Label(self, text="Page one", font=('Helvetica', 18, "bold")).pack(side="top", fill="x", pady=10)
-        tk.Button(self, text="Go to start page",command=lambda: master.switch_frame(StartPage)).pack()
-"""
 
 class MainPage(tk.Frame):
     def __init__(self, master: BookApp):
-        self.master = master
+        self.master:BookApp = master
         tk.Frame.__init__(self, master)
         #self.grid(sticky="nsew")
         self.create_widgets()
@@ -60,17 +47,19 @@ class MainPage(tk.Frame):
 
 class UserPage(tk.Frame):
     def __init__(self,master:BookApp):
-        print(type(master))
+        self.master:BookApp = master
         tk.Frame.__init__(self, master)
         tk.Button(self,text="メインページに戻る",command=lambda: master.switch_frame(MainPage)).pack()
 
 class BookListPage(tk.Frame):
     def __init__(self,master:BookApp):
+        self.master:BookApp = master
         tk.Frame.__init__(self, master)
         tk.Button(self,text="メインページに戻る",command=lambda: master.switch_frame(MainPage)).pack()
 
 class BorrowPage(tk.Frame):
     def __init__(self, master:BookApp):
+        self.master:BookApp = master
         tk.Frame.__init__(self,master)
         tk.Button(self,text="メインページに戻る",command=lambda: master.switch_frame(MainPage)).pack()
 
