@@ -179,6 +179,7 @@ class Books():
         else:
             raise BooksError("This book does not exist!")
 
+"""
 class User:
     def __init__(self, student_id:str):
         self.student_id:str = student_id
@@ -206,4 +207,4 @@ class User:
         # ユーザーが現在借りている全ての本を表示します。
         print(f"User {self.student_id} has borrowed these books:")
         print(self.borrowed_books)
-
+"""
