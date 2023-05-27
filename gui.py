@@ -1,4 +1,5 @@
 import tkinter as tk
+import csv
 
 class BookApp(tk.Tk):
     def __init__(self):
@@ -44,12 +45,41 @@ class MainPage(tk.Frame):
 
     def quit(self):
         print("終了がクリックされました")
+        self.master.destroy()
+
+def nextpage():
+    with open('ID.csv', 'a')as f:
+        writer = csv.writer(f)
+        writer.writerow()
 
 class UserPage(tk.Frame):
     def __init__(self,master:BookApp):
         self.master:BookApp = master
+        super().__init__()
+        label = tk.Label(self, text="学籍番号")
+        label.grid(row=1, column=1)
+        ID_text = tk.StringVar(self)
+        tk.Entry(
+            self,
+            textvariable=ID_text
+        ).grid(row=1, column=2)
+
+        tk.Button(self, text="前へ", command=lambda:master.switch_frame(MainPage)).grid(row=3, column=1)
+        tk.Button(self, text="次へ", command=self.nextpage_Button).grid(row=3, column=3)
+    
+    def nextpage_Button(self):
+        self.master.switch_frame(UserPage2)
+        #ここにUser処理を書く
+
+class UserPage2(UserPage):
+    def __init__(self, master:BookApp):
+        self.master:BookApp = master
         tk.Frame.__init__(self, master)
-        tk.Button(self,text="メインページに戻る",command=lambda: master.switch_frame(MainPage)).pack()
+        label_1 = tk.Label(self,text="ユーザー登録が完了しました")
+        label_1.grid(row=1, column=1)
+        topbtn = tk.Button(self,text="メインメニューへ戻る", command=lambda:master.switch_frame(MainPage))
+        topbtn.grid(row=2, column=1)
+        
 
 class BookListPage(tk.Frame):
     def __init__(self,master:BookApp):
