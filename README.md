@@ -1,2 +1,2 @@
 # BookManagement
-著者:Hugo, souma, kensei
+著者:koyahugo, hamabu0531
