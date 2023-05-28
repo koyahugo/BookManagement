@@ -18,6 +18,7 @@ if __name__ == "__main__":
     b.borrow_book(isbn="9784563012519",student_id="2312079")
     b.return_book(isbn="9784563012519",student_id="2312079")
     b.borrow_book(isbn="9784563012519",student_id="2312079")
+    b.show_borrow_books(student_id="2312079")
     b.borrow_book(isbn="9784563012519",student_id="2312079")
     
     

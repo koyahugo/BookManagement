@@ -1,8 +1,12 @@
 import tkinter as tk
 import csv
+from users import Users
+from books import Books
 
 class BookApp(tk.Tk):
-    def __init__(self):
+    def __init__(self, users_class:Users):
+        self.users_class:Users = users_class
+        self.books_class:Books = self.users_class.retunr_books_class()
         tk.Tk.__init__(self)
         self._frame:tk.Frame = None
         self.switch_frame(MainPage)
@@ -65,11 +69,13 @@ class UserPage(tk.Frame):
         ).grid(row=1, column=2)
 
         tk.Button(self, text="前へ", command=lambda:master.switch_frame(MainPage)).grid(row=3, column=1)
-        tk.Button(self, text="次へ", command=self.nextpage_Button).grid(row=3, column=3)
+        tk.Button(self, text="次へ", command=lambda:self.nextpage_Button(ID_text.get())).grid(row=3, column=3)
     
-    def nextpage_Button(self):
-        self.master.switch_frame(UserPage2)
+    def nextpage_Button(self, student_id):
         #ここにUser処理を書く
+        self.master.users_class.add_user(student_id=student_id)
+        #User処理が成功したら次の画面へ進む
+        self.master.switch_frame(UserPage2)
 
 class UserPage2(UserPage):
     def __init__(self, master:BookApp):
@@ -95,5 +101,5 @@ class BorrowPage(tk.Frame):
 
 
 if __name__ == "__main__":
-    app = BookApp()
+    app = BookApp(Users(Books))
     app.mainloop()

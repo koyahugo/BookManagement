@@ -9,12 +9,17 @@ class User():
         self.book_list.append(isbn)
     def return_book(self,isbn:str):
         self.book_list.remove(isbn)
+    def return_borrow_books_list(self) -> list :
+        return self.book_list
 
 
 class Users():
     def __init__(self, books:Books):
         self.student_dict:dict[str, User] = {}
         self.books:Books = books
+    
+    def retunr_books_class(self) -> Books:
+        return self.books
     
     def add_user(self, student_id):
         self.student_dict[student_id] = User(student_id)
@@ -41,3 +46,7 @@ class Users():
         except BookError as e:
             print(e)
 
+    def show_borrow_books(self,student_id) -> None:
+        print(self.student_dict[student_id].return_borrow_books_list())
+    def return_borrow_books_list(self,student_id) -> list:
+        return self.student_dict[student_id].return_borrow_books_list()
