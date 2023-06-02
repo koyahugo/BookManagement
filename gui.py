@@ -8,6 +8,9 @@ class BookApp(tk.Tk):
         self.users_class:Users = users_class
         self.books_class:Books = self.users_class.retunr_books_class()
         tk.Tk.__init__(self)
+        self.title("図書管理アプリ")
+        self.geometry("800x600")
+        self.font = ('Helvetica', 18)
         self._frame:tk.Frame = None
         self.switch_frame(MainPage)
 
@@ -26,14 +29,14 @@ class MainPage(tk.Frame):
         self.create_widgets()
 
     def create_widgets(self):
-        tk.Button(self, text="ユーザー登録", font=('Helvetica', 18),
+        tk.Button(self, text="ユーザー登録", font=self.master.font,
                   command=self.user_registration).grid(row=0, column=0, sticky="nsew")
-        tk.Button(self, text="図書一覧", font=('Helvetica', 18),
-                  command=self.book_list).grid(row=1, column=0, sticky="nsew")
-        tk.Button(self, text="貸出", font=('Helvetica', 18),
-                  command=self.borrow).grid(row=2, column=0, sticky="nsew")
-        tk.Button(self, text="終了", font=('Helvetica', 18),
-                  command=self.quit).grid(row=3, column=0, sticky="nsew")
+        tk.Button(self, text="図書一覧", font=self.master.font,
+                  command=self.book_list).grid(row=2, column=0, sticky="nsew")
+        tk.Button(self, text="貸出", font=self.master.font,
+                  command=self.borrow).grid(row=4, column=0, sticky="nsew")
+        tk.Button(self, text="終了", font=self.master.font,
+                  command=self.quit).grid(row=6, column=0, sticky="nsew")
 
     def user_registration(self):
         print("ユーザー登録がクリックされました")
@@ -60,16 +63,19 @@ class UserPage(tk.Frame):
     def __init__(self,master:BookApp):
         self.master:BookApp = master
         super().__init__()
-        label = tk.Label(self, text="学籍番号")
+        label = tk.Label(self, font=self.master.font, text="学籍番号")
         label.grid(row=1, column=1)
         ID_text = tk.StringVar(self)
         tk.Entry(
             self,
+            font=self.master.font,
             textvariable=ID_text
         ).grid(row=1, column=2)
 
-        tk.Button(self, text="前へ", command=lambda:master.switch_frame(MainPage)).grid(row=3, column=1)
-        tk.Button(self, text="次へ", command=lambda:self.nextpage_Button(ID_text.get())).grid(row=3, column=3)
+        tk.Button(self, text="前へ",font=self.master.font,
+                  command=lambda:master.switch_frame(MainPage)).grid(row=3, column=1)
+        tk.Button(self, text="次へ",font=self.master.font,
+                  command=lambda:self.nextpage_Button(ID_text.get())).grid(row=3, column=3)
     
     def nextpage_Button(self, student_id):
         #ここにUser処理を書く
@@ -81,25 +87,31 @@ class UserPage2(UserPage):
     def __init__(self, master:BookApp):
         self.master:BookApp = master
         tk.Frame.__init__(self, master)
-        label_1 = tk.Label(self,text="ユーザー登録が完了しました")
+        label_1 = tk.Label(self,text="ユーザー登録が完了しました", font=self.master.font)
         label_1.grid(row=1, column=1)
-        topbtn = tk.Button(self,text="メインメニューへ戻る", command=lambda:master.switch_frame(MainPage))
+        topbtn = tk.Button(self,text="メインメニューへ戻る", font=self.master.font, command=lambda:master.switch_frame(MainPage))
         topbtn.grid(row=2, column=1)
-        
+
 
 class BookListPage(tk.Frame):
     def __init__(self,master:BookApp):
         self.master:BookApp = master
         tk.Frame.__init__(self, master)
-        tk.Button(self,text="メインページに戻る",command=lambda: master.switch_frame(MainPage)).pack()
+        tk.Button(self, font=self.master.font,text="メインページに戻る", 
+                  command=lambda: master.switch_frame(MainPage)).pack()
+    
+    def create_widgets(self):
+        pass
 
 class BorrowPage(tk.Frame):
     def __init__(self, master:BookApp):
         self.master:BookApp = master
         tk.Frame.__init__(self,master)
-        tk.Button(self,text="メインページに戻る",command=lambda: master.switch_frame(MainPage)).pack()
+        tk.Button(self,font=self.master.font,text="メインページに戻る", 
+                  command=lambda: master.switch_frame(MainPage)).pack()
 
-
+"""
 if __name__ == "__main__":
     app = BookApp(Users(Books))
     app.mainloop()
+"""

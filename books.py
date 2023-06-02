@@ -117,12 +117,13 @@ class Books():
     # 本の情報をJSONファイルとして保存するメソッド
     def save_books(self):
         for isbn, book in self.books.items():
-            with open(f'{isbn}.json', 'w') as f:
+            with open(f'./books/{isbn}.json', 'w') as f:
                 json.dump(book.return_info_dic(), f, indent=4)
 
     # JSONファイルから本の情報を読み込むメソッド
     def load_books(self):
-        for filename in os.listdir():
+        os.makedirs("books", exist_ok=True)
+        for filename in os.listdir("./books"):
             if filename.endswith(".json"):
                 isbn = filename[:-5]
                 with open(filename, 'r') as f:
