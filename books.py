@@ -126,7 +126,7 @@ class Books():
         for filename in os.listdir("./books"):
             if filename.endswith(".json"):
                 isbn = filename[:-5]
-                with open(filename, 'r') as f:
+                with open(f"./books/{filename}", 'r') as f:
                     book_info = json.load(f)
                 book = Book(isbn,book_info)
                 self.books[isbn] = book
