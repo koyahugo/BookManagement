@@ -113,6 +113,7 @@ class Books():
     # 初期化メソッド
     def __init__(self):
         self.books:dict[str,Book] = {}  # ISBNをキーとした本の辞書
+        self.load_books()
 
     # 本の情報をJSONファイルとして保存するメソッド
     def save_books(self):
@@ -139,8 +140,8 @@ class Books():
     def remove_books(self, isbn):
         if isbn in self.books:
             del self.books[isbn]
-            if os.path.exists(f'{isbn}.json'):
-                os.remove(f'{isbn}.json')
+            if os.path.exists(f'books/{isbn}.json'):
+                os.remove(f'books/{isbn}.json')
 
     # 全ての本の情報を表示するメソッド
     def show_allbooks_info(self):
@@ -180,32 +181,3 @@ class Books():
         else:
             raise BooksError("This book does not exist!")
 
-"""
-class User:
-    def __init__(self, student_id:str):
-        self.student_id:str = student_id
-        self.borrowed_books:list[str] = []
-
-    def borrow_book(self,books: Books, isbn : str):
-        try:
-            books.borrow_book(isbn)
-            self.borrowed_books.append(isbn)
-            print(f"{self.student_id}が{isbn}を借りました")
-            print(f"{isbn}のじょうほうは{books.show_book_info(isbn)}")
-        except BooksError as a:
-            print(a)
-
-    def return_book(self, books: Books, isbn: str):
-        try:
-            books.return_book(isbn)
-            self.borrowed_books.remove(isbn)
-            print(f"{self.student_id}が{isbn}を返しました")
-            print(f"{isbn}のじょうほうは{books.show_book_info(isbn)}")
-        except BooksError as a:
-            print(a)
-
-    def show_borrowed_books(self):
-        # ユーザーが現在借りている全ての本を表示します。
-        print(f"User {self.student_id} has borrowed these books:")
-        print(self.borrowed_books)
-"""
