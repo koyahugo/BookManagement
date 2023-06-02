@@ -133,7 +133,7 @@ class Books():
                 self.books[isbn] = book
 
     # 新たに本を追加するメソッド
-    def add_books(self, isbn):
+    def add_books(self, isbn:str):
         self.books[isbn] = Book(isbn)
 
     # 本を削除するメソッド
